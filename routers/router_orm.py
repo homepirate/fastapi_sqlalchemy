@@ -2,7 +2,7 @@ from random import random
 
 from fastapi import APIRouter, Request, Depends, Body
 from fastapi.responses import JSONResponse
-from sqlalchemy import select
+from sqlalchemy import select, delete, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import with_polymorphic
 
@@ -20,7 +20,7 @@ router_orm= APIRouter(
 templates = Jinja2Templates(directory="templates")
 
 
-@router_orm.post("create-user")
+@router_orm.post("/create-user")
 async def create_user(user_dict: UserCreate, session=Depends(get_async_session)):
     user_dict = dict(user_dict)
     title = user_dict.pop("title")
@@ -75,8 +75,59 @@ async def create_user(user_dict: UserCreate, session=Depends(get_async_session))
     await session.commit()
 
 
-async def get_user_abs(name: str, session= Depends(get_async_session)):
-    q = select(User, Realestate.name).where(User.name == name).join(Realestate, User.id == Realestate.userid)
+@router_orm.post("/user-ads-byname")
+async def get_user_ads(name: str, session=Depends(get_async_session)):
+    q = select(User, Realestate).where(User.name == name).join(User.realestate)
     resp = await session.execute(q)
     resp = resp.all()
+    data = [{"id": i[0].id, "name":i[0].name, "surname": i[0].surname,
+             "email":i[0].email, "rename":i[1].name}for i in resp]
+    return data
+
+
+@router_orm.post("/ads-incity-order-price")
+async def get_re_in_city_order_price(session=Depends(get_async_session)):
+    q = select(Realestate, Address).join(Address, Realestate.addressid == Address.id).order_by(Realestate.price)
+    resp = await session.execute(q)
+    resp = resp.all()
+    data = [{"name":i[0].name, "price":i[0].price, "square":i[0].square,
+             "floor":i[0].floor, "apartamentnumber":i[0].apartamentnumber,
+             "city":i[1].city, "district":i[1].district, "sreet":i[1].street,
+             "housenumber":i[1].housenumber} for i in resp]
+    return data
+
+
+@router_orm.delete("/delete-user-{uid}")
+async def delete_user(uid: int, session=Depends(get_async_session)):
+    q = select(User.statusid).where(User.id == uid)
+    resp = await session.execute(q)
+    resp = resp.first()
+    q = delete(Status).where(Status.id == resp[0])
+    await session.execute(q)
+    q = delete(User).where(User.id==uid)
+    await session.execute(q)
+    await session.commit()
+    q = select(User)
+    resp = await session.execute(q)
+    resp = resp.all()
+    data = [{"id":i[0].id, "name":i[0].name, "surname":i[0].surname, "email":i[0].email} for i in resp]
+    return data
+
+
+@router_orm.post("/count-indistrict")
+async def count_in_district(session=Depends(get_async_session)):
+    # GROUP_BY ПЕРЕНЕСТИ ЭТО В ЗАПРОСЫ НА SQL
+    pass
+
+
+@router_orm.post("/all_users")
+def get_all_users(session=Depends(get_async_session)):
+    q = select(User, with_polymorphic(Status, [Owner, Realtor, Company])) \
+        .join(with_polymorphic(Status, [Owner, Realtor, Company]), User.statusid == Status.id)
+
+    resp = session.execute(q)
+    resp = resp.all()
+
+    data = [i[0] for i in resp] # просто через i[0].status доставать параметры из status(Owner, Company, Realtor)
+    return data
 
