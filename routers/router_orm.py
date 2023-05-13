@@ -2,7 +2,7 @@ from random import random
 
 from fastapi import APIRouter, Request, Depends, Body
 from fastapi.responses import JSONResponse
-from sqlalchemy import select, delete, func
+from sqlalchemy import select, delete, func, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import with_polymorphic
 
@@ -113,11 +113,6 @@ async def delete_user(uid: int, session=Depends(get_async_session)):
     data = [{"id":i[0].id, "name":i[0].name, "surname":i[0].surname, "email":i[0].email} for i in resp]
     return data
 
-
-@router_orm.post("/count-indistrict")
-async def count_in_district(session=Depends(get_async_session)):
-    # GROUP_BY ПЕРЕНЕСТИ ЭТО В ЗАПРОСЫ НА SQL
-    pass
 
 
 @router_orm.post("/all_users")
