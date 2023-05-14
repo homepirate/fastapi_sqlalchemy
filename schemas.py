@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, Field
 
 
 class UserCreate(BaseModel):
@@ -12,10 +12,10 @@ class UserCreate(BaseModel):
     statusid: int
     login: str
     page: int
-    name: str
-    surname: str
+    name: str = Field(..., max_length=10)
+    surname: str = Field(..., max_length=10)
     phonenumber: int
-    email: str
+    email: EmailStr
     password: str
     # is_active: Optional[bool] = True
     # is_superuser: Optional[bool] = False

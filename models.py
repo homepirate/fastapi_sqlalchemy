@@ -4,7 +4,7 @@ from sqlalchemy import INTEGER, String, Column, FLOAT, ForeignKey, BOOLEAN
 from sqlalchemy.orm import relationship, validates
 from fastapi_users.db import SQLAlchemyBaseUserTable
 
-
+import re
 class Status(Base):
     __tablename__ = 'status'
 
@@ -87,9 +87,14 @@ class User(SQLAlchemyBaseUserTable[int], Base):
 
     @validates("email")
     def validate_email(self, key, address):
-        if "@" not in address:
+        pattern = r"^[-\w\.]+@([-\w]+\.)+[-\w]{2,4}$"
+        if re.match(pattern, address) is not None:
+            return address
+        else:
             raise ValueError("failed simple email validation")
-        return address
+        # if "@" not in address:
+        #     raise ValueError("failed simple email validation")
+        # return address
 
     def __repr__(self):
         return str(self.__dict__)

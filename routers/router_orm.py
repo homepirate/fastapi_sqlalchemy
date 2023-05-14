@@ -1,6 +1,6 @@
 from random import random
 
-from fastapi import APIRouter, Request, Depends, Body
+from fastapi import APIRouter, Request, Depends, Body, Query
 from fastapi.responses import JSONResponse
 from sqlalchemy import select, delete, func, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -77,6 +77,8 @@ async def create_user(user_dict: UserCreate, session=Depends(get_async_session))
 
 @router_orm.post("/user-ads-byname")
 async def get_user_ads(name: str, session=Depends(get_async_session)):
+    if "delete from" in name.lower() or "drop table" in name.lower():
+        return "ERROR"
     q = select(User, Realestate).where(User.name == name).join(User.realestate)
     resp = await session.execute(q)
     resp = resp.all()
@@ -97,22 +99,25 @@ async def get_re_in_city_order_price(session=Depends(get_async_session)):
     return data
 
 
-@router_orm.delete("/delete-user-{uid}")
-async def delete_user(uid: int, session=Depends(get_async_session)):
-    q = select(User.statusid).where(User.id == uid)
-    resp = await session.execute(q)
-    resp = resp.first()
-    q = delete(Status).where(Status.id == resp[0])
-    await session.execute(q)
-    q = delete(User).where(User.id==uid)
-    await session.execute(q)
+@router_orm.delete("/delete-user/{uid}")
+async def delete_user(uid: int = Query(..., regex=r"^\d+$"), session=Depends(get_async_session)):
+    q = select(User).where(User.id == uid)
+    user = await session.execute(q)
+    user = user.scalars().one()
+    stid = user.statusid
+    await session.delete(user)
+
+    q = select(Status).where(Status.id == stid)
+    status = await session.execute(q)
+    status = status.scalars().one()
+    await session.delete(status)
+
     await session.commit()
     q = select(User)
     resp = await session.execute(q)
     resp = resp.all()
     data = [{"id":i[0].id, "name":i[0].name, "surname":i[0].surname, "email":i[0].email} for i in resp]
     return data
-
 
 
 @router_orm.post("/all_users")
