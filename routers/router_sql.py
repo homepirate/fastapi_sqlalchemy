@@ -20,7 +20,7 @@ templates = Jinja2Templates(directory="templates")
 
 
 @router_sql.put("/email-change/{uid}")
-async def change_email(uid: int = Query(..., regex=r"^\d+$"), email: EmailStr = Query(), session=Depends(get_async_session)):
+async def change_email(uid: int = Query(..., regex=r"^\d+$"), email: EmailStr = Body(), session=Depends(get_async_session)):
     stmt = text('UPDATE "user" SET email=:email WHERE id=:id')
     # pattern = r"^[-\w\.]+@([-\w]+\.)+[-\w]{2,4}$"
     #

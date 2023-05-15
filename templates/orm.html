@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form>
+  <h1>
+  Запросы через ORM
+</h1>
+  <div id="wrapper">
+    <div id="arrow"></div>
+    <ol>
+      <li>
+         <div>
+          <p>
+        Запрос отображающий всех пользователей
+          </p>
+          <button>
+            <span>
+            Выполнить
+            </span>
+          </button>
+           <div id="first-query">
+           </div>
+         </div>
+   </li>
+   <li>
+         <div>
+          <p>
+            Запрос удаляющий пользователя с определенным ID
+          </p>
+           <input id="UID" placeholder="ID" type="text">
+          <button>
+            <span>
+            Выполнить
+            </span>
+          </button>
+           <div id="second-query">
+             </div>
+         </div>
+   </li>
+   <li>
+         <div>
+          <p>
+            Запрос выводящий все объявления отсортированные по цене
+          </p>
+          <button>
+            <span>
+            Выполнить
+            </span>
+          </button>
+           <div id="thrid-query">
+             </div>
+         </div>
+   </li>
+   <li>
+         <div>
+          <p>
+            Запрос выводящий все объявления у пользователей с определенным именем
+          </p>
+           <input id="name" placeholder="name" type="text">
+          <button>
+            <span>
+            Выполнить
+            </span>
+          </button>
+           <div id="fourth-query">
+             </div>
+         </div>
+   </li>
+     </ol>
+  </div>
+
+</form>
+
+{% endblock %}

@@ -26,17 +26,6 @@ body {
 
 #wrapper { overflow: hidden; }
 
-#signin:checked ~ #wrapper { height: 174px; }
-#signin:checked ~ #wrapper #arrow { left: 32px; }
-#signin:checked ~ #hint { bottom: 20px; }
-#signin:checked ~ button span { transform: translate3d(0,-72px,0); }
-
-#signup:checked ~ #wrapper { height: 550px; }
-#signup:checked ~ #wrapper #arrow { left: 137px; }
-#signup:checked ~ #hint { bottom: 400px; }
-#signup:checked ~ button span { transform: translate3d(0,-144px,0); }
-
-
 
 form {
   width: 450px;
@@ -47,7 +36,6 @@ form {
   top: 50%;
 }
 
-input[type=radio][name=action] { display: none; }
 
 label {
   cursor: pointer;
@@ -59,7 +47,7 @@ label {
   text-transform: uppercase;
 }
 
-p{
+p, ol{
 font-size: 27px;
   font-family: 'Raleway', sans-serif;
   width: 99.5%;
@@ -74,8 +62,6 @@ label:hover {
   transition: all .3s cubic-bezier(.6,0,.4,1);
   opacity: 1;
 }
-label[for="signin"] { margin-right: 20px; }
-input[type=radio]:checked + label { opacity: 1; }
 
 input[type=text],
 input[type=tel],
@@ -125,7 +111,6 @@ button:hover {
   overflow: scroll;
   height: 0;
   width: 0;
-  border-bottom: 10px solid #fff;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
   position: relative;
