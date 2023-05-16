@@ -3,8 +3,6 @@ from starlette.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
 from models import Realestate, Address, User
-from schemas import ReModel
-
 from routers.router import router_api
 
 app = FastAPI()

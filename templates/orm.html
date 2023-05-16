@@ -1,6 +1,60 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<script>
+    function send_first(){
+        let response = fetch('/api/orm/all_users', {
+           method: 'POST',
+        }).then(response => response.text())
+                .then(data => {
+                for (i in data){
+                if (i.status.title == "owner"){
+                  document.getElementById("first-query").innerHTML += "<span>${i.id}, ${i.name}, ${i.status.title}, ${i.status.verified}</span>";}
+                else if (i.status.title == "realtor"){
+                 document.getElementById("first-query").innerHTML += "<span>${i.id}, ${i.name}, ${i.status.title}, ${i.status.yearsw}</span>";}
+                 }
+                else if (i.status.title == "company"){
+                 document.getElementById("first-query").innerHTML += "<span>${i.id}, ${i.name}, ${i.status.title}, ${i.status.yearsw}, ${i.status.companyname}, ${i.status.websity}</span>";}
+                }
+                }});
+    }
+
+    function send_second(){
+        uid = document.getElementById("UID").value;
+        let response = fetch('/api/orm/delete-user/${uid}', {
+           method: 'DELETE',
+        }).then(response => response.text()).then(data => {
+        for (i in data){
+         document.getElementById("second-query").innerHTML += "<span>${i['id']}, ${i['name']}, ${i['surname']}, ${i['email']}</span>"
+        }
+        }
+    }
+
+    function send_thrid(){
+        let response = fetch('/api/orm/ads-incity-order-price', {
+               method: 'POST',
+            }).then(response => response.text()).then(data => {
+            for (i in data){
+             document.getElementById("thrid-query").innerHTML += "<span>${i['name']}, цена: ${i['price']}, площадь: ${i['square']}, этаж: ${i['floor']}, Адрес: ${i['city']}, ${i['district']}, ${i['sreet']}, ${i['housenumber']}, ${i['apartamentnumber']}</span>"
+            }
+            }
+    }
+
+   function send_fourth(){
+        let response = fetch('/api/orm/user-ads-byname' + new URLSearchParams({
+        name: document.getElementById("name").value}), {
+        method: "POST",
+        }).then(response => response.text()).then(data => {
+        if (data == "ERROR") {document.getElementById("fourth-query").innerHTML = <span>ОШИБКА</span>}
+        else{
+            for (i in data){
+             document.getElementById("fourth-query").innerHTML += "<span>${i['id']}, ${i['name']}, ${i['surname']}, ${i['email']}, ${i['rename']}</span>"
+            }
+        }
+        }
+    }
+
+</script>
 <form>
   <h1>
   Запросы через ORM
@@ -13,7 +67,7 @@
           <p>
         Запрос отображающий всех пользователей
           </p>
-          <button>
+          <button onclick="send_first()">
             <span>
             Выполнить
             </span>
@@ -28,7 +82,7 @@
             Запрос удаляющий пользователя с определенным ID
           </p>
            <input id="UID" placeholder="ID" type="text">
-          <button>
+          <button onclick="send_second()">
             <span>
             Выполнить
             </span>
@@ -42,7 +96,7 @@
           <p>
             Запрос выводящий все объявления отсортированные по цене
           </p>
-          <button>
+          <button onclick="send_thrid()">
             <span>
             Выполнить
             </span>
@@ -57,7 +111,7 @@
             Запрос выводящий все объявления у пользователей с определенным именем
           </p>
            <input id="name" placeholder="name" type="text">
-          <button>
+          <button onclick="send_fourth()">
             <span>
             Выполнить
             </span>

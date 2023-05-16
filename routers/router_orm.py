@@ -12,7 +12,7 @@ from schemas import UserCreate
 from starlette.templating import Jinja2Templates
 
 
-router_orm= APIRouter(
+router_orm = APIRouter(
     prefix='/orm',
     tags=["Orm"]
 )
@@ -100,7 +100,8 @@ async def get_re_in_city_order_price(session=Depends(get_async_session)):
 
 
 @router_orm.delete("/delete-user/{uid}")
-async def delete_user(uid: int = Query(..., regex=r"^\d+$"), session=Depends(get_async_session)):
+# async def delete_user(uid: int = Query(..., regex=r"^\d+$"), session=Depends(get_async_session)):
+async def delete_user(uid: int, session=Depends(get_async_session)):
     q = select(User).where(User.id == uid)
     user = await session.execute(q)
     user = user.scalars().one()
@@ -126,8 +127,10 @@ def get_all_users(session=Depends(get_async_session)):
         .join(with_polymorphic(Status, [Owner, Realtor, Company]), User.statusid == Status.id)
 
     resp = session.execute(q)
-    resp = resp.all()
+    resp = resp.scalars().all()
 
-    data = [i[0] for i in resp] # просто через i[0].status доставать параметры из status(Owner, Company, Realtor)
+    data = [i for i in resp]
+
     return data
+
 
