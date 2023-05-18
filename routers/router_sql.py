@@ -19,10 +19,14 @@ templates = Jinja2Templates(directory="templates")
 
 
 @router_sql.put("/email-change/{uid}")
-# async def change_email(uid: int = Query(..., regex=r"^\d+$"), email: EmailStr = Body(), session=Depends(get_async_session)):
-async def change_email(uid: int, email: str, session=Depends(get_async_session)):
+# async def change_email(uid: int = Query(..., regex=r"^\d+$"), email: EmailStr, session=Depends(get_async_session)):
+async def change_email(uid: int, email: EmailStr, session=Depends(get_async_session)):
 
-    stmt = text('UPDATE "user" SET email=:email WHERE id=:id')
+
+    # stmt = text('UPDATE "user" SET email=:email WHERE id=:id')
+
+    stmt = text('UPDATE "user" SET email=%s WHERE id=%s')
+
     # pattern = r"^[-\w\.]+@([-\w]+\.)+[-\w]{2,4}$"
     #
     # if re.match(pattern, email) is not None:
@@ -31,7 +35,8 @@ async def change_email(uid: int, email: str, session=Depends(get_async_session))
     #     return "EMAIL НЕ ПРОШЕЛ ВАЛИДАЦИЮ"
 
     data = {"id": uid, "email": email}
-    await session.execute(stmt, params=data)
+    # await session.execute(stmt, params=data)
+    await session.execute(stmt, email, uid)
     await session.commit()
 
     stmt = text('SELECT "user" WHERE id:id')
@@ -49,4 +54,15 @@ async def count_in_district(session=Depends(get_async_session)):
     resp = await session.execute(stmt)
     resp = resp.all()
     return resp
+
+
+@router_sql.post("user-with-large-flats-in-city")
+async def get_users_with_large_flats_incity(sqaure: int, city: str, session=Depends(get_async_session)):
+    stmt = text("""SELECT * FROM "user" us WHERE EXISTS (SELECT re.name, re.square FROM realestate re JOIN address ad on re.addressid=ad.id WHERE re.userid=us.id AND re.square > %s and ad.city=%s""")
+
+    resp = await session.execute(stmt, sqaure, city)
+    resp = resp.scalars().all()
+
+    data = [{"id":i.id, "name":i.name, "surname":i.surname, "email":i.email, "title": i.status.title} for i in resp]
+    return data    
 
