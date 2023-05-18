@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script>
+    function send_first(){
+        uid = document.getElementById("UID").value;
+        let response = fetch(`/api/sql/email-change/${uid}`, {
+           method: 'POST',
+        }).then(response => response.text())
+                .then(data => {
+                document.getElementById("first-query").innerHTML = `<span>${i['id']}, ${i['name']}, ${i['email']}</span>`;
+                });
+    }
+
+    function send_second(){
+        uid = document.getElementById("UID").value;
+        let response = fetch(`/api/sql/count-indistrict`, {
+           method: 'DELETE',
+        }).then(response => response.text()).then(data => {
+            document.getElementById("second-query").innerHTML = "";
+        for (i in data){
+         document.getElementById("second-query").innerHTML += `<span>${i['id']}, ${i['name']}, ${i['surname']}, ${i['email']}</span>`
+        }
+        });
+    }
+
+    function send_thrid(){
+        let response = fetch('/api/sql/user-with-large-flats-in-city?'+ new URLSearchParams({
+        square: document.getElementById("square").value,
+        city: document.getElementById("city").value}), {
+               method: 'POST',
+            }).then(response => response.text()).then(data => {
+                document.getElementById("thrid-query").innerHTML = "";
+            for (i in data){
+             document.getElementById("thrid-query").innerHTML += `<span>${i['name']} ${i['surname']} ${i['email']} ${i['title']}</span>`
+            }
+            });
+    }
+
+
+</script>
+
+<form>
+    <h1>
+    Raw SQL запросы
+  </h1>
+    <div id="wrapper">
+      <div id="arrow"></div>
+      <ol>
+        <li>
+           <div>
+            <p>
+          Запрос изменеющий email у пользователя с опредененным id 
+            </p>
+             <input id="UID" placeholder="ID" type="text">
+             <input id="email" placeholder="email" type="text">
+            <button onclick="send_first()">
+              <span>
+              Выполнить
+              </span>
+            </button>
+             <div id="first-query">
+             </div>
+           </div>
+     </li>
+     <li>
+           <div>
+            <p>
+             Запрос показывающий колличество квартир в каждом районе
+            </p>
+            <button onclick="send_second()">
+              <span>
+              Выполнить
+              </span>
+            </button>
+             <div id="second-query">
+               </div>
+           </div>
+     </li>
+     <li>
+           <div>
+            <p>
+              Запрос выводящий всех пользователей с квартирой в опредеденоом городе и площадью больше указанной
+            </p>
+             <input id="city" placeholder="city" type="text">
+             <input id="square" placeholder="square" type="text">
+            <button onclick="send_thrid()">
+              <span>
+              Выполнить
+              </span>
+            </button>
+             <div id="thrid-query">
+               </div>
+           </div>
+     </li>
+       </ol>
+    </div>
+  
+  </form>
+
+{% endblock %}
