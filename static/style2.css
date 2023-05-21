@@ -16,6 +16,7 @@ body {
 }
 
 
+
 #hint {
   width: 100%;
   text-align: center;
@@ -24,8 +25,9 @@ body {
 
 #wrapper, label, #arrow, button span { transition: all .5s cubic-bezier(.6,0,.4,1); }
 
-#wrapper { overflow: hidden; }
-
+h1 {
+  text-align: center;
+}
 
 form {
   width: 450px;
@@ -33,9 +35,8 @@ form {
   margin: -185px -225px;
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 30%;
 }
-
 
 label {
   cursor: pointer;
@@ -115,4 +116,25 @@ button:hover {
   border-right: 10px solid transparent;
   position: relative;
   left: 32px;
+}
+
+a {
+  position: absolute;
+  display: inline-block;
+  top:20px;
+  right: 100px;
+  background: #079BCF;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  font-family: 'Raleway', sans-serif;
+  font-size: 27px;
+  padding: 5px;
+  text-decoration: none; 
+  margin-bottom: 10px;
+  transition: all .3s cubic-bezier(.6,0,.4,1);
+}
+a:hover {
+  background: #007BA5;
 }
