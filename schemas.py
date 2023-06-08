@@ -7,7 +7,7 @@ class UserCreate(BaseModel):
     verified: Optional[bool] = False
     yearsw: int = None
     companyname: str = None
-    yearsw: int = None
+    yearsw: str = None
     website: Optional[str] = None
     statusid: int
     login: str

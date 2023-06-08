@@ -1,4 +1,6 @@
-from database import Base
+import asyncio
+
+from database import Base, engine
 
 from sqlalchemy import INTEGER, String, Column, FLOAT, ForeignKey, BOOLEAN
 from sqlalchemy.orm import relationship, validates
@@ -126,3 +128,11 @@ class Realestate(Base):
     numberofelevators = Column(INTEGER, nullable=True)
     user = relationship("User", back_populates="realestate")
     address = relationship("Address", back_populates="realestate", uselist=False)
+
+
+# async def init_models():
+#     async with engine.begin() as conn:
+#         await conn.run_sync(Base.metadata.drop_all)
+#         await conn.run_sync(Base.metadata.create_all)
+#
+# asyncio.run(init_models())

@@ -1,4 +1,4 @@
-from random import random
+import random
 
 from fastapi import APIRouter, Request, Depends, Body, Query
 from fastapi.responses import JSONResponse
@@ -30,7 +30,7 @@ async def create_user(user_dict: UserCreate, session=Depends(get_async_session))
         user_dict.pop("yearsw")
         verified = user_dict.pop("verified")
         c = Owner(title=title, verified=verified)
-        await session.add(c)
+        session.add(c)
         await session.commit()
         await session.refresh(c)
         stid = c.id
@@ -40,7 +40,7 @@ async def create_user(user_dict: UserCreate, session=Depends(get_async_session))
         user_dict.pop("verified")
         yearsw = user_dict.pop("yearsw")
         c = Realtor(title=title, yearsw=yearsw)
-        await session.add(c)
+        session.add(c)
         await session.commit()
         await session.refresh(c)
         stid = c.id
@@ -50,7 +50,7 @@ async def create_user(user_dict: UserCreate, session=Depends(get_async_session))
         website = user_dict.pop("website")
         yearsw = user_dict.pop("yearsw")
         c = Company(title=title, companyname=companyname, website=website, yearsw=yearsw)
-        await session.add(c)
+        session.add(c)
         await session.commit()
         await session.refresh(c)
         stid = c.id
@@ -66,12 +66,12 @@ async def create_user(user_dict: UserCreate, session=Depends(get_async_session))
     name = user_dict.pop("name")
     surname = user_dict.pop("surname")
     email = user_dict.pop("email")
-    phonenumber = user_dict.pop("phone_number")
+    phonenumber = user_dict.pop("phonenumber")
 
     user = User(statusid=statusid, page=page, login=login, password=password, name=name,
                 surname=surname, email=email, phonenumber=phonenumber)
 
-    await session.add(user)
+    session.add(user)
     await session.commit()
 
 
