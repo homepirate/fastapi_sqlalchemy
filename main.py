@@ -34,3 +34,14 @@ def get_orm_page(request: Request):
         },
         status_code=200
     )
+
+
+@app.get("/registration")
+def register_page(request: Request):
+    return templates.TemplateResponse(
+        "reg.html",
+        {
+            "request": request
+        },
+        status_code=200
+    )

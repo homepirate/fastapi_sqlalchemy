@@ -25,7 +25,7 @@ async def change_email(uid: int, email: EmailStr, session=Depends(get_async_sess
 
     # stmt = text('UPDATE "user" SET email=:email WHERE id=:id')
 
-    stmt = text('UPDATE "user" SET email=%s WHERE id=%s')
+    stmt = text('UPDATE "user" SET email=%s WHERE id=%d')
 
     # pattern = r"^[-\w\.]+@([-\w]+\.)+[-\w]{2,4}$"
     #
@@ -58,7 +58,7 @@ async def count_in_district(session=Depends(get_async_session)):
 
 @router_sql.post("user-with-large-flats-in-city")
 async def get_users_with_large_flats_incity(sqaure: int, city: str, session=Depends(get_async_session)):
-    stmt = text("""SELECT * FROM "user" us WHERE EXISTS (SELECT re.name, re.square FROM realestate re JOIN address ad on re.addressid=ad.id WHERE re.userid=us.id AND re.square > %s and ad.city=%s""")
+    stmt = text("""SELECT * FROM "user" us WHERE EXISTS (SELECT re.name, re.square FROM realestate re JOIN address ad on re.addressid=ad.id WHERE re.userid=us.id AND re.square > %d and ad.city=%s)""")
 
     resp = await session.execute(stmt, sqaure, city)
     resp = resp.scalars().all()

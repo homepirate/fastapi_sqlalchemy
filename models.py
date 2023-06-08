@@ -65,22 +65,18 @@ class Owner(Status):
         return str(self.__dict__)
 
 
-class User(SQLAlchemyBaseUserTable[int], Base):
+class User(Base):
     __tablename__ = "user"
 
     id = Column(INTEGER, primary_key=True)
     statusid = Column(INTEGER, ForeignKey("status.id", ondelete="CASCADE"))
     page = Column(INTEGER, nullable=False)
     login = Column(String, nullable=False)
-    # hashed_password = Column(String, nullable=False)
     password = Column(String, nullable=False)
     name = Column(String, nullable=False)
     surname = Column(String, nullable=False)
     email = Column(String, nullable=False)
     phonenumber = Column(INTEGER, nullable=False)
-    # is_active = Column(BOOLEAN, default=True, nullable=False)
-    # is_superuser = Column(BOOLEAN, default=False, nullable=False)
-    # is_verified = Column(BOOLEAN, default=False, nullable=False)
     status = relationship("Status", back_populates="user", uselist=False)
     realestate = relationship("Realestate", back_populates="user", cascade="all, delete",
         passive_deletes=True)

@@ -121,23 +121,6 @@
     })
   }
 
-  function send_auth_data(data){
-    var formBody = [];
-    for (var property in data) {
-      var encodedKey = encodeURIComponent(property);
-      var encodedValue = encodeURIComponent(data[property]);
-      formBody.push(encodedKey + "=" + encodedValue);
-    }
-    formBody = formBody.join("&");
-
-    fetch('/auth/jwt/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-      },
-      body: formBody
-    })
-}
 </script>
 <link rel="stylesheet" href="{{ url_for('static', path='css/style2.css') }}">
 
@@ -146,8 +129,8 @@
   <div id="wrapper">
     <div id="arrow"></div>
     <input id="email" placeholder="Email" type="text">
-    <input id="pass" placeholder="Password" type="password">
     <input id="login" placeholder="Login" type="text">
+    <input id="pass" placeholder="Password" type="password">
     <input id="name" placeholder="Name" type="text">
     <input id="surname" placeholder="Surname" type="text">
      <input id="phone" placeholder="800-555-35-35" pattern="[0-9]{3}-[0-9]{3}-[0-9]{2}-[0-9]{2}" type="tel">
@@ -169,5 +152,4 @@
     </span>
   </button>
 </form>
-<div id="hint">Click on the tabs</div>
 {% endblock %}
