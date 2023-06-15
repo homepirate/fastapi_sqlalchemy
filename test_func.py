@@ -7,7 +7,7 @@ from routers.router_orm import create_user
 import asyncio
 
 
-async def atest_dd_users():
+async def test_add_users():
    lst = [{
         "title": "owner",
         "verified": False,
@@ -130,3 +130,39 @@ async def atest_dd_users():
         },
    ]
 
+
+
+async def test_add_address():
+   lst = [
+      Address(city="Moscow", district="Perovo", street="Bratskaya", housenumber="44"),
+     Address(city="Moscow", district="Perovo", street="Bratskaya", housenumber="3"),
+     Address(city="Moscow", district="Perovo", street="Bratskaya", housenumber="46"),
+     Address(city="Moscow", district="Perovo", street="Bratskaya", housenumber="10"),
+     Address(city="Moscow", district="Perovo", street="Lazo", housenumber="3"),
+     Address(city="Moscow", district="Perovo", street="Lazo", housenumber="3"),
+     Address(city="Moscow", district="Perovo", street="Lazo", housenumber="5"),
+     Address(city="Moscow", district="Perovo", street="Lazo", housenumber="7"),
+     Address(city="Moscow", district="Donskoi", street="Leninsky Prospekt", housenumber="29"),
+     Address(city="Moscow", district="Donskoi", street="Leninsky Prospekt", housenumber="21"),
+     Address(city="Moscow", district="Donskoi", street="Stasovoy", housenumber="1"),
+     Address(city="Moscow", district="Donskoi", street="Stasovoy", housenumber="7"),
+     Address(city="Moscow", district="Danilovsky", street="3-y Paveletskiy proyezd", housenumber="3"),
+     Address(city="Moscow", district="Zyuzino", street="Malaya Yushunskaya ulitsa", housenumber="6"),
+     ]
+
+
+async def test_add_flats():
+   lst = [
+      Realestate(userid=1, addressid=2, name="Новая квартира", numberofrooms=3, price=11000000, floor=1, square=60, yearofconstruction=2022, numberofbathrooms=1, сeilingheight=2.3, balcony=1, numberofelevators=3, apartamentnumber=3),
+     Realestate(userid=4, addressid=2, name="Квартира в Перово", numberofrooms=3, price=13000000, floor=3, square=78, yearofconstruction=2017, numberofbathrooms=1, сeilingheight=2.5, balcony=1, numberofelevators=2, apartamentnumber=23),
+     Realestate(userid=2, addressid=9, name="Квартира", numberofrooms=3, price=11000000, floor=23, square=100, yearofconstruction=2012, numberofbathrooms=1, сeilingheight=2.1, balcony=1, numberofelevators=4, apartamentnumber=70),
+     Realestate(userid=7, addressid=13, name="Продается квартира", numberofrooms=3, price=11000000, floor=13, square=79, yearofconstruction=1956, numberofbathrooms=1, сeilingheight=3, balcony=1, numberofelevators=2, apartamentnumber=60),
+     Realestate(userid=4, addressid=13, name="Хорошая квартира", numberofrooms=3, price=23400000, floor=3, square=130, yearofconstruction=1977, numberofbathrooms=1, сeilingheight=2.7, balcony=1, numberofelevators=2, apartamentnumber=12),
+     Realestate(userid=3, addressid=14, name="Новая квартира", numberofrooms=3, price=12000000, floor=2, square=132, yearofconstruction=1999, numberofbathrooms=1, сeilingheight=2.9, balcony=1, numberofelevators=2, apartamentnumber=5),
+     Realestate(userid=5, addressid=9, name="Квартира в Москве", numberofrooms=6, price=17000000, floor=15, square=90, yearofconstruction=2023, numberofbathrooms=1, сeilingheight=2.6, balcony=1, numberofelevators=1, apartamentnumber=77),
+     Realestate(userid=4, addressid=11, name="Большая двухкомнатная квартира", numberofrooms=2, price=13500000, floor=5, square=88, yearofconstruction=1981, numberofbathrooms=1, сeilingheight=2.2, balcony=1, numberofelevators=2, apartamentnumber=18),
+     Realestate(userid=8, addressid=1, name="Квартира трехкомнатная", numberofrooms=3, price=9000000, floor=5, square=66, yearofconstruction=1966, numberofbathrooms=1, сeilingheight=2.2, balcony=1, numberofelevators=1, apartamentnumber=15),
+     Realestate(userid=8, addressid=7, name="Далеко не новая квартира", numberofrooms=5, price=88800000, floor=1, square=155, yearofconstruction=1811, numberofbathrooms=1, сeilingheight=3.5, balcony=2, apartamentnumber=1),
+     Realestate(userid=6, addressid=3, name="Новая квартира", numberofrooms=3, price=10000000, floor=5, square=49, yearofconstruction=2022, numberofbathrooms=1, сeilingheight=2, balcony=1, numberofelevators=3, apartamentnumber=19),
+
+   ]
