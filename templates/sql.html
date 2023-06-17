@@ -2,13 +2,15 @@
 
 {% block content %}
 <script>
+  
     function send_first(){
         uid = document.getElementById("UID").value;
-        let response = fetch(`/api/sql/email-change/${uid}`, {
-           method: 'POST',
-        }).then(response => response.text())
+        let response = fetch(`/api/sql/email-change/${uid}?`+ new URLSearchParams({
+        email: document.getElementById("email").value}), {
+           method: 'PUT',}).then(response => response.text())
                 .then(data => {
-                document.getElementById("first-query").innerHTML = `<span>${i['id']}, ${i['name']}, ${i['email']}</span>`;
+                  data = JSON.parse(data);
+                document.getElementById("first-query").innerHTML = `<span>${data.id}, ${data.name}, ${data.email}\n</span>`;
                 });
     }
 
@@ -17,6 +19,7 @@
         let response = fetch(`/api/sql/count-indistrict`, {
            method: 'DELETE',
         }).then(response => response.text()).then(data => {
+          data = JSON.parse(data);
             document.getElementById("second-query").innerHTML = "";
         for (i in data){
          document.getElementById("second-query").innerHTML += `<span>${i['id']}, ${i['name']}, ${i['surname']}, ${i['email']}</span>`
@@ -30,6 +33,7 @@
         city: document.getElementById("city").value}), {
                method: 'POST',
             }).then(response => response.text()).then(data => {
+              data = JSON.parse(data);
                 document.getElementById("thrid-query").innerHTML = "";
             for (i in data){
              document.getElementById("thrid-query").innerHTML += `<span>${i['name']} ${i['surname']} ${i['email']} ${i['title']}</span>`
@@ -54,7 +58,7 @@
             </p>
              <input id="UID" placeholder="ID" type="text">
              <input id="email" placeholder="email" type="text">
-            <button onclick="send_first()">
+            <button type="button" onclick="send_first()">
               <span>
               Выполнить
               </span>

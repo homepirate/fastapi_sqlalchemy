@@ -7,6 +7,7 @@
            method: 'POST',
         }).then(response => response.text())
                 .then(data => {
+                  data = JSON.parse(data);
                   document.getElementById("first-query").innerHTML = "";
                 for (i in data){
                 if (i.status.title == "owner"){
@@ -24,6 +25,7 @@
         let response = fetch(`/api/orm/delete-user/${uid}`, {
            method: 'DELETE',
         }).then(response => response.text()).then(data => {
+          data = JSON.parse(data);
           document.getElementById("second-query").innerHTML = "";
         for (i in data){
          document.getElementById("second-query").innerHTML += `<span>${i['id']}, ${i['name']}, ${i['surname']}, ${i['email']}</span>`
@@ -35,6 +37,7 @@
         let response = fetch('/api/orm/ads-incity-order-price', {
                method: 'POST',
             }).then(response => response.text()).then(data => {
+              data = JSON.parse(data);
               document.getElementById("thrid-query").innerHTML = "";
             for (i in data){
              document.getElementById("thrid-query").innerHTML += `<span>${i['name']}, цена: ${i['price']}, площадь: ${i['square']}, этаж: ${i['floor']}, Адрес: ${i['city']}, ${i['district']}, ${i['sreet']}, ${i['housenumber']}, ${i['apartamentnumber']}</span>`
@@ -47,6 +50,7 @@
         name: document.getElementById("name").value}), {
         method: "POST",
         }).then(response => response.text()).then(data => {
+          data = JSON.parse(data);
           document.getElementById("fourth-query").innerHTML = "";
         if (data.replace(/"/g, '') === "ERROR") {document.getElementById("fourth-query").innerHTML = "<span>ОШИБКА</span>"}
         else{

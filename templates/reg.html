@@ -1,102 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<script>
 
-  function check_rb(){
-  var rb = document.getElementsByName("status");
-  const new_inpt = document.getElementById("add-new-inp");
-  if (rb[0].checked){
-  console.log(rb[0].value);
-  document.getElementById('wrapper').style= " height: 550px;";
-  new_inpt.innerHTML = '';
-    }
-  else if (rb[1].checked){
-  console.log(rb[1].value);
-  	document.getElementById('wrapper').style= " height: 850px;";
-    new_inpt.innerHTML = '<input id="companyname" placeholder="Company name" type="text"><input id="website" placeholder="Website" type="text"><p>Год начала работы</p><select id="year"></select>';
-      for (let year = 1985; year <= 2023; year++) {
-  let options = document.createElement("OPTION");
-  document.getElementById("year").appendChild(options).innerHTML = year;
-      }
-    }
-  else if (rb[2].checked){
-  console.log(rb[2].value);
-  document.getElementById('wrapper').style= " height: 680px;";
-  new_inpt.innerHTML = '<p>Год начала работы</p><select id="year"></select>';
-  for (let year = 1985; year <= 2023; year++) {
-  let options = document.createElement("OPTION");
-  document.getElementById("year").appendChild(options).innerHTML = year;
-      }
-    }
-  }
-  function send_data(){
-     var data = new FormData();
-     var rbs = document.getElementsByName("status");
-     if (rbs[0].checked){
-     data.append("email", document.getElementsById("email"))
-     data.append("password", document.getElementsById("pass"))
-     data.append("title", rbs[0].value)
-     data.append("verified", false)
-     data.append("yearsw","string")
-     data.append("companyname","string")
-     data.append("website", "string")
-     data.append("statusid", 0)
-     data.append("login", document.getElementsById("login"))
-     data.append("page", 0)
-     data.append("name", document.getElementsById("name"))
-     data.append("surname", document.getElementsById("surname"))
-     data.append("phonenumber", document.getElementsById("phonenumber"))
-     }
-     else if (rb[1].checked){
-     data.append("email", document.getElementsById("email"))
-     data.append("password", document.getElementsById("pass"))
-     data.append("title", rbs[1].value)
-     data.append("verified", false)
-     data.append("yearsw", `${document.getElementsById("year").value}`)
-     data.append("companyname", document.getElementsById("companyname"))
-     data.append("website", document.getElementsById("website"))
-     data.append("statusid", 0)
-     data.append("login", document.getElementsById("login"))
-     data.append("page", 0)
-     data.append("name", document.getElementsById("name"))
-     data.append("surname", document.getElementsById("surname"))
-     data.append("phonenumber", document.getElementsById("phonenumber"))
-     }
-     else if (rb[2].checked){
-     data.append("email", document.getElementsById("email"))
-     data.append("password", document.getElementsById("pass"))
-     data.append("title", rbs[2].value)
-     data.append("verified", false)
-     data.append("yearsw", `${document.getElementsById("year").value}`)
-     data.append("companyname","string")
-     data.append("website", "string")
-     data.append("statusid", 0)
-     data.append("login", document.getElementsById("login"))
-     data.append("page", 0)
-     data.append("name", document.getElementsById("name"))
-     data.append("surname", document.getElementsById("surname"))
-     data.append("phonenumber", document.getElementsById("phonenumber"))
-     }
-     send_reg_data(data);
-  }
-
-  function send_reg_data(data){
-  console.log(data);
-  fetch("/api/orm/create-user", {
-    method: 'POST',
-    body: data,
-    headers: {
-    'accept': 'application/json',
-    'Content-Type': 'application/json'
-    }
-    })
-  }
-
-</script>
 <link rel="stylesheet" href="{{ url_for('static', path='css/style2.css') }}">
 
-<form>
+<form id="formdiv">
   <h1>Sign up</h1>
   <div id="wrapper">
     <div id="arrow"></div>
@@ -105,7 +13,7 @@
     <input id="pass" placeholder="Password" type="password">
     <input id="name" placeholder="Name" type="text">
     <input id="surname" placeholder="Surname" type="text">
-     <input id="phone" placeholder="8-800-555-35-35" pattern="[0-9]-[0-9]{3}-[0-9]{3}-[0-9]{2}-[0-9]{2}" type="tel">
+     <input id="phone" placeholder="88005553535" pattern="[0-9][0-9]{3}[0-9]{3}[0-9]{2}[0-9]{2}" type="tel">
     <div>
       <input type="radio" id="owner" value="owner" name="status" onchange="check_rb()">
       <label for="owner">Владелец</label>
@@ -118,10 +26,112 @@
 
       </div>
   </div>
-  <button type="submit" onclick="send_data()">
+  <button type="button" onclick="send_data()">
     <span>
       Sign up
     </span>
   </button>
 </form>
+<script defer>
+  function check_rb(){
+      var rb = document.getElementsByName("status");
+      const new_inpt = document.getElementById("add-new-inp");
+      if (rb[0].checked){
+      console.log(rb[0].value);
+      document.getElementById('wrapper').style= " height: 550px;";
+      new_inpt.innerHTML = '';
+        }
+      else if (rb[1].checked){
+      console.log(rb[1].value);
+          document.getElementById('wrapper').style= " height: 850px;";
+        new_inpt.innerHTML = '<input id="companyname" placeholder="Company name" type="text"><input id="website" placeholder="Website" type="text"><p>Год начала работы</p><select id="year"></select>';
+          for (let year = 1985; year <= 2023; year++) {
+      let options = document.createElement("OPTION");
+      document.getElementById("year").appendChild(options).innerHTML = year;
+          }
+        }
+      else if (rb[2].checked){
+      console.log(rb[2].value);
+      document.getElementById('wrapper').style= " height: 680px;";
+      new_inpt.innerHTML = '<p>Год начала работы</p><select id="year"></select>';
+      for (let year = 1985; year <= 2023; year++) {
+      let options = document.createElement("OPTION");
+      document.getElementById("year").appendChild(options).innerHTML = year;
+          }
+        }
+      }
+      function send_data (){
+         var data;
+         var rbs = document.getElementsByName("status");
+         if (rbs[0].checked){
+          data = JSON.stringify({
+              email: document.getElementById("email").value,
+              password : document.getElementById("pass").value,
+              title: rbs[0].value,
+         verified : false,
+         yearsw: "string",
+         companyname : "string",
+         website : "string",
+         statusid : 0,
+         login : document.getElementById("login").value,
+         page : 0,
+         name : document.getElementById("name").value,
+         surname : document.getElementById("surname").value,
+         phonenumber : document.getElementById("phone").value,
+          })
+         }
+         else if (rbs[1].checked){
+          
+          data = JSON.stringify({
+         email : document.getElementById("email").value,
+         password : document.getElementById("pass").value,
+         title : rbs[1].value,
+         verified : false,
+         yearsw : `${document.getElementById("year").value}`,
+         companyname : document.getElementById("companyname").value,
+         website :  document.getElementById("website").value,
+         statusid : 0,
+         login : document.getElementById("login").value,
+         page:  0,
+         name : document.getElementById("name").value,
+         surname: document.getElementById("surname").value,
+         phonenumber: document.getElementById("phone").value,
+        })
+         }
+         else if (rbs[2].checked){
+          data = JSON.stringify({
+         email : document.getElementById("email").value,
+         password : document.getElementById("pass").value,
+         title : rbs[2].value,
+         verified : false,
+         yearsw : `${document.getElementsById("year").value}`,
+         companyname : "string",
+         website : "string",
+         statusid : 0,
+         login : document.getElementById("login").value,
+         page : 0,
+         name: document.getElementById("name").value,
+         surname: document.getElementById("surname").value,
+         phonenumber : document.getElementById("phone").value,
+        })
+         }
+         console.log(data);
+         send_reg_data(data);
+      }
+    
+      function send_reg_data(data){
+      console.log(data);
+      var a = fetch("/api/orm/create-user", {
+        method: 'POST',
+        body: data,
+        headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json'
+        }
+        })
+        console.log(a)
+      }
+    
+  </script>
+
 {% endblock %}

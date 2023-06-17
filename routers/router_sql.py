@@ -22,10 +22,10 @@ templates = Jinja2Templates(directory="templates")
 # async def change_email(uid: int = Query(..., regex=r"^\d+$"), email: EmailStr, session=Depends(get_async_session)):
 async def change_email(uid: int, email: EmailStr, session=Depends(get_async_session)):
 
-
+    print(uid, type(uid), email, type(email))
     # stmt = text('UPDATE "user" SET email=:email WHERE id=:id')
 
-    stmt = text('UPDATE "user" SET email=%s WHERE id=%d')
+    stmt = text("""UPDATE "user" SET email=:email WHERE id=:id""")
 
     # pattern = r"^[-\w\.]+@([-\w]+\.)+[-\w]{2,4}$"
     #
@@ -33,16 +33,17 @@ async def change_email(uid: int, email: EmailStr, session=Depends(get_async_sess
     #     data = {"id":uid, "email":email}
     # else:
     #     return "EMAIL НЕ ПРОШЕЛ ВАЛИДАЦИЮ"
-
     data = {"id": uid, "email": email}
     # await session.execute(stmt, params=data)
-    await session.execute(stmt, email, uid)
-    await session.commit()
 
-    stmt = text('SELECT "user" WHERE id:id')
+    await session.execute(stmt, params=data)
+    await session.commit()
+    
+
+    stmt = text("""SELECT * FROM "user" WHERE id=:id""")
     resp = await session.execute(stmt, params={"id":uid})
     resp = resp.first()
-
+    
     data = {"id":resp.id, "name":resp.name, "email":resp.email}
     return data
 
