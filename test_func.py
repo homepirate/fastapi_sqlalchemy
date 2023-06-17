@@ -9,6 +9,8 @@ from routers.router_orm import create_user
 import asyncio
 
 import requests
+from database import get_async_session
+from fastapi import Depends
 
 
 def test_add_users():
@@ -25,7 +27,7 @@ def test_add_users():
         "page": 0,
         "name": "Evgeniy",
         "surname": "Loginov",
-        "phonenumber": 8800553535,
+        "phonenumber": 88005553535,
         "email": "evg1@example.com",
         "password": "pass1313rsf"
       },
@@ -134,14 +136,48 @@ def test_add_users():
              "email": "saleflats@info.ru",
              "password": "admin12345!"
         },
+        {
+             "title": "owner",
+             "verified": "false",
+             "yearsw": "string",
+             "companyname": "string",
+             "website": "string",
+             "statusid": 0,
+             "login": "MeganFox",
+             "page": 0,
+             "name": "Megan",
+             "surname": "Fox",
+             "phonenumber": 87714881337,
+             "email": "mgfx@best.com",
+             "password": "I_lOvE_U!"
+        },
+        {
+             "title": "owner",
+             "verified": "false",
+             "yearsw": "string",
+             "companyname": "string",
+             "website": "string",
+             "statusid": 0,
+             "login": "NewUserColson",
+             "page": 0,
+             "name": "Colson",
+             "surname": "Baker",
+             "phonenumber": 87714881337,
+             "email": "dfdf@fff.us",
+             "password": "new!pass!1"
+        },
    ]
     for i in lst:
         r = requests.post('http://localhost:8000/api/orm/create-user', headers=headers, json=i)
         print(r)
 
 
-def test_add_address():
-   lst = [
+async def test_add_address():
+     session = get_async_session()
+     session = anext(session)
+     session = await session
+
+     lst = [
       Address(city="Moscow", district="Perovo", street="Bratskaya", housenumber="44"),
      Address(city="Moscow", district="Perovo", street="Bratskaya", housenumber="3"),
      Address(city="Moscow", district="Perovo", street="Bratskaya", housenumber="46"),
@@ -157,10 +193,17 @@ def test_add_address():
      Address(city="Moscow", district="Danilovsky", street="3-y Paveletskiy proyezd", housenumber="3"),
      Address(city="Moscow", district="Zyuzino", street="Malaya Yushunskaya ulitsa", housenumber="6"),
      ]
+     for i in lst:
+          session.add(i)
+          await session.commit()
 
 
-def test_add_flats():
-   lst = [
+
+async def test_add_flats():
+     session = get_async_session()
+     session = anext(session)
+     session = await session
+     lst = [
       Realestate(userid=1, addressid=2, name="Новая квартира", numberofrooms=3, price=11000000, floor=1, square=60, yearofconstruction=2022, numberofbathrooms=1, сeilingheight=2.3, balcony=1, numberofelevators=3, apartamentnumber=3),
      Realestate(userid=4, addressid=2, name="Квартира в Перово", numberofrooms=3, price=13000000, floor=3, square=78, yearofconstruction=2017, numberofbathrooms=1, сeilingheight=2.5, balcony=1, numberofelevators=2, apartamentnumber=23),
      Realestate(userid=2, addressid=9, name="Квартира", numberofrooms=3, price=11000000, floor=23, square=100, yearofconstruction=2012, numberofbathrooms=1, сeilingheight=2.1, balcony=1, numberofelevators=4, apartamentnumber=70),
@@ -174,8 +217,17 @@ def test_add_flats():
      Realestate(userid=6, addressid=3, name="Новая квартира", numberofrooms=3, price=10000000, floor=5, square=49, yearofconstruction=2022, numberofbathrooms=1, сeilingheight=2, balcony=1, numberofelevators=3, apartamentnumber=19),
 
    ]
+     for i in lst:
+          session.add(i)
+          await session.commit()
+
+
+
 
 
 if __name__ == '__main__':
-    test_add_users()
-    
+     pass
+#     test_add_users()
+#     asyncio.run(test_add_address())
+#     asyncio.run(test_add_flats())
+     
