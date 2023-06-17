@@ -23,6 +23,7 @@ templates = Jinja2Templates(directory="templates")
 @router_orm.post("/create-user")
 async def create_user(user_dict: UserCreate, session=Depends(get_async_session)):
     user_dict = dict(user_dict)
+    print(user_dict)
     title = user_dict.pop("title")
     if title == "owner":
         user_dict.pop("companyname")

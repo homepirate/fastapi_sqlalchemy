@@ -2,7 +2,7 @@ import asyncio
 
 from database import Base, engine
 
-from sqlalchemy import INTEGER, String, Column, FLOAT, ForeignKey, BOOLEAN
+from sqlalchemy import INTEGER, String, Column, FLOAT, ForeignKey, BOOLEAN, BigInteger
 from sqlalchemy.orm import relationship, validates
 from fastapi_users.db import SQLAlchemyBaseUserTable
 
@@ -78,7 +78,7 @@ class User(Base):
     name = Column(String, nullable=False)
     surname = Column(String, nullable=False)
     email = Column(String, nullable=False)
-    phonenumber = Column(INTEGER, nullable=False)
+    phonenumber = Column(BigInteger, nullable=False)
     status = relationship("Status", back_populates="user", uselist=False)
     realestate = relationship("Realestate", back_populates="user", cascade="all, delete",
         passive_deletes=True)
@@ -118,7 +118,7 @@ class Realestate(Base):
     addressid = Column(INTEGER, ForeignKey("address.id", ondelete="CASCADE"))
     name = Column(String, nullable=False)
     numberofrooms = Column(INTEGER, nullable=False)
-    price = Column(INTEGER, nullable=False)
+    price = Column(BigInteger, nullable=False)
     floor = Column(INTEGER, nullable=True)
     square = Column(INTEGER, nullable=False)
     yearofconstruction = Column(INTEGER, nullable=False)

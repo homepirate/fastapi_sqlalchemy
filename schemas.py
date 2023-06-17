@@ -5,9 +5,8 @@ from pydantic import BaseModel, EmailStr, Field
 class UserCreate(BaseModel):
     title: str
     verified: Optional[bool] = False
-    yearsw: int = None
-    companyname: str = None
     yearsw: str = None
+    companyname: str = None
     website: Optional[str] = None
     statusid: int
     login: str

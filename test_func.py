@@ -1,3 +1,5 @@
+import time
+
 from sqlalchemy import select, insert
 from sqlalchemy.orm import with_polymorphic
 
@@ -6,11 +8,15 @@ from models import User, Status, Owner, Realtor, Company, Realestate, Address
 from routers.router_orm import create_user
 import asyncio
 
+import requests
 
-async def test_add_users():
-   lst = [{
+
+def test_add_users():
+    headers = {'accept': 'application/json',
+               'Content-Type': 'application/json'}
+    lst = [{
         "title": "owner",
-        "verified": False,
+        "verified": "false",
         "yearsw": "1986",
         "companyname": "string",
         "website": "string",
@@ -25,7 +31,7 @@ async def test_add_users():
       },
         {
              "title": "realtor",
-             "verified": False,
+             "verified": "false",
              "yearsw": "1995",
              "companyname": "string",
              "website": "string",
@@ -40,7 +46,7 @@ async def test_add_users():
         },
         {
              "title": "owner",
-             "verified": True,
+             "verified": "true",
              "yearsw": "1986",
              "companyname": "string",
              "website": "string",
@@ -55,7 +61,7 @@ async def test_add_users():
         },
         {
              "title": "company",
-             "verified": False,
+             "verified": "false",
              "yearsw": "1996",
              "companyname": "cian",
              "website": "cian.ru",
@@ -70,7 +76,7 @@ async def test_add_users():
         },
         {
              "title": "realtor",
-             "verified": False,
+             "verified": "false",
              "yearsw": "1953",
              "companyname": "string",
              "website": "string",
@@ -85,7 +91,7 @@ async def test_add_users():
         },
         {
              "title": "owner",
-             "verified": True,
+             "verified": "true",
              "yearsw": "string",
              "companyname": "string",
              "website": "string",
@@ -100,7 +106,7 @@ async def test_add_users():
         },
         {
              "title": "owner",
-             "verified": False,
+             "verified": "false",
              "yearsw": "1953",
              "companyname": "string",
              "website": "string",
@@ -115,7 +121,7 @@ async def test_add_users():
         },
         {
              "title": "company",
-             "verified": False,
+             "verified": "false",
              "yearsw": "2013",
              "companyname": "sale_flats",
              "website": "sale-flats.ru",
@@ -129,10 +135,12 @@ async def test_add_users():
              "password": "admin12345!"
         },
    ]
+    for i in lst:
+        r = requests.post('http://localhost:8000/api/orm/create-user', headers=headers, json=i)
+        print(r)
 
 
-
-async def test_add_address():
+def test_add_address():
    lst = [
       Address(city="Moscow", district="Perovo", street="Bratskaya", housenumber="44"),
      Address(city="Moscow", district="Perovo", street="Bratskaya", housenumber="3"),
@@ -151,7 +159,7 @@ async def test_add_address():
      ]
 
 
-async def test_add_flats():
+def test_add_flats():
    lst = [
       Realestate(userid=1, addressid=2, name="Новая квартира", numberofrooms=3, price=11000000, floor=1, square=60, yearofconstruction=2022, numberofbathrooms=1, сeilingheight=2.3, balcony=1, numberofelevators=3, apartamentnumber=3),
      Realestate(userid=4, addressid=2, name="Квартира в Перово", numberofrooms=3, price=13000000, floor=3, square=78, yearofconstruction=2017, numberofbathrooms=1, сeilingheight=2.5, balcony=1, numberofelevators=2, apartamentnumber=23),
@@ -166,3 +174,7 @@ async def test_add_flats():
      Realestate(userid=6, addressid=3, name="Новая квартира", numberofrooms=3, price=10000000, floor=5, square=49, yearofconstruction=2022, numberofbathrooms=1, сeilingheight=2, balcony=1, numberofelevators=3, apartamentnumber=19),
 
    ]
+
+
+if __name__ == '__main__':
+    test_add_users()
