@@ -23,18 +23,9 @@ templates = Jinja2Templates(directory="templates")
 async def change_email(uid: int, email: EmailStr, session=Depends(get_async_session)):
 
     print(uid, type(uid), email, type(email))
-    # stmt = text('UPDATE "user" SET email=:email WHERE id=:id')
 
     stmt = text("""UPDATE "user" SET email=:email WHERE id=:id""")
-
-    # pattern = r"^[-\w\.]+@([-\w]+\.)+[-\w]{2,4}$"
-    #
-    # if re.match(pattern, email) is not None:
-    #     data = {"id":uid, "email":email}
-    # else:
-    #     return "EMAIL НЕ ПРОШЕЛ ВАЛИДАЦИЮ"
     data = {"id": uid, "email": email}
-    # await session.execute(stmt, params=data)
 
     await session.execute(stmt, params=data)
     await session.commit()
@@ -54,16 +45,18 @@ async def count_in_district(session=Depends(get_async_session)):
             realestate JOIN address ON realestate.addressid=address.id GROUP BY district""")
     resp = await session.execute(stmt)
     resp = resp.all()
-    return resp
+    data = [{"district":i[0], "count":i[1]}for i in resp]
+    return data
 
 
-@router_sql.post("user-with-large-flats-in-city")
-async def get_users_with_large_flats_incity(sqaure: int, city: str, session=Depends(get_async_session)):
-    stmt = text("""SELECT * FROM "user" us WHERE EXISTS (SELECT re.name, re.square FROM realestate re JOIN address ad on re.addressid=ad.id WHERE re.userid=us.id AND re.square > %d and ad.city=%s)""")
+@router_sql.post("/user-with-large-flats-in-city")
+async def get_users_with_large_flats_incity(square: int, city: str, session=Depends(get_async_session)):
+    stmt = text("""SELECT * FROM "user" us JOIN status st ON us.statusid=st.id WHERE EXISTS (SELECT re.name, re.square FROM realestate re JOIN address ad on re.addressid=ad.id WHERE re.userid=us.id AND re.square > :square and ad.city=:city)""")
 
-    resp = await session.execute(stmt, sqaure, city)
-    resp = resp.scalars().all()
+    resp = await session.execute(stmt, params={"city": city, "square":square})
+    resp = resp.all()
+    print(resp)
 
-    data = [{"id":i.id, "name":i.name, "surname":i.surname, "email":i.email, "title": i.status.title} for i in resp]
+    data = [{"id":i.id, "name":i.name, "surname":i.surname, "email":i.email, "title": i.title} for i in resp]
     return data    
 

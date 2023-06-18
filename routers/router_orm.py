@@ -80,11 +80,12 @@ async def create_user(user_dict: UserCreate, session=Depends(get_async_session))
 async def get_user_ads(name: str, session=Depends(get_async_session)):
     if "delete from" in name.lower() or "drop table" in name.lower():
         return "ERROR"
-    q = select(User, Realestate).where(User.name == name).join(User.realestate)
+    q = select(User, Realestate).where(User.name == name).join(Realestate, Realestate.userid==User.id)
     resp = await session.execute(q)
     resp = resp.all()
     data = [{"id": i[0].id, "name":i[0].name, "surname": i[0].surname,
              "email":i[0].email, "rename":i[1].name}for i in resp]
+    print(data)
     return data
 
 
@@ -101,7 +102,6 @@ async def get_re_in_city_order_price(session=Depends(get_async_session)):
 
 
 @router_orm.delete("/delete-user/{uid}")
-# async def delete_user(uid: int = Query(..., regex=r"^\d+$"), session=Depends(get_async_session)):
 async def delete_user(uid: int, session=Depends(get_async_session)):
     q = select(User).where(User.id == uid)
     user = await session.execute(q)
@@ -123,15 +123,17 @@ async def delete_user(uid: int, session=Depends(get_async_session)):
 
 
 @router_orm.post("/all_users")
-def get_all_users(session=Depends(get_async_session)):
+async def get_all_users(session=Depends(get_async_session)):
     q = select(User, with_polymorphic(Status, [Owner, Realtor, Company])) \
         .join(with_polymorphic(Status, [Owner, Realtor, Company]), User.statusid == Status.id)
 
-    resp = session.execute(q)
-    resp = resp.scalars().all()
-
-    data = [i for i in resp]
-
+    resp = await session.execute(q)
+    resp = resp.all()
+    data = dict()
+    count = 0
+    for i in resp:
+        count += 1
+        data[f'{count}'] = i[0].__dict__ | i[1].__dict__
     return data
 
 

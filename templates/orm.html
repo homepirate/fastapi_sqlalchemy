@@ -8,14 +8,40 @@
         }).then(response => response.text())
                 .then(data => {
                   data = JSON.parse(data);
+                  console.log(data);
                   document.getElementById("first-query").innerHTML = "";
-                for (i in data){
-                if (i.status.title == "owner"){
-                  document.getElementById("first-query").innerHTML += `<span>${i.id}, ${i.name}, ${i.status.title}, ${i.status.verified}</span>`;}
-                else if (i.status.title == "realtor"){
-                 document.getElementById("first-query").innerHTML += `<span>${i.id}, ${i.name}, ${i.status.title}, ${i.status.yearsw}</span>`;}
-                else if (i.status.title == "company"){
-                 document.getElementById("first-query").innerHTML += `<span>${i.id}, ${i.name}, ${i.status.title}, ${i.status.yearsw}, ${i.status.companyname}, ${i.status.websity}</span>`;}
+                  document.getElementById("first-query").innerHTML =`<tr>
+                    <td>ID</td>
+                    <td>Имя</td>
+                    <td>Статус</td>
+                    <td>Верифицированный</td>
+                    <td>Год начала работы</td>
+                    <td>Компания</td>
+                    <td>Сайт</td>
+                    </tr>`;
+                for (var key in data){
+                  i = data[key]
+                if (i.title == "owner"){
+                  document.getElementById("first-query").innerHTML += `<tr><td>${i.id}</td><td>${i.name}</td><td>${i.title}</td><td>${i.verified}</td></tr>`}
+                else if (i.title == "realtor"){
+                 document.getElementById("first-query").innerHTML += `<tr>
+                  <td>${i.id}</td>
+                  <td>${i.name}</td>
+                  <td>${i.title}</td>
+                  <td></td>
+                  <td>${i.yearsw}</td>
+                  </tr>`}
+                else if (i.title == "company"){
+                 document.getElementById("first-query").innerHTML += 
+                 `<tr>
+                  <td>${i.id}</td>
+                  <td>${i.name}</td>
+                  <td>${i.title}</td>
+                  <td></td>
+                  <td>${i.yearsw}</td>
+                  <td>${i.companyname}</td>
+                  <td>${i.website}</td>
+                  </tr>`;}
                 }
                 });
     }
@@ -27,8 +53,21 @@
         }).then(response => response.text()).then(data => {
           data = JSON.parse(data);
           document.getElementById("second-query").innerHTML = "";
-        for (i in data){
-         document.getElementById("second-query").innerHTML += `<span>${i['id']}, ${i['name']}, ${i['surname']}, ${i['email']}</span>`
+          document.getElementById("second-query").innerHTML = `<tr>
+            <td>ID</td>
+            <td>Имя</td>
+            <td>Фамилия</td>
+            <td>Email</td>
+            </tr>`;
+        for (var key in data){
+          i = data[key]
+         document.getElementById("second-query").innerHTML += 
+         `<tr>
+            <td>${i['id']}</td>
+            <td>${i['name']}</td>
+            <td>${i['surname']}</td>
+            <td>${i['email']}</td>
+            </tr>`
         }
         });
     }
@@ -39,8 +78,11 @@
             }).then(response => response.text()).then(data => {
               data = JSON.parse(data);
               document.getElementById("thrid-query").innerHTML = "";
-            for (i in data){
-             document.getElementById("thrid-query").innerHTML += `<span>${i['name']}, цена: ${i['price']}, площадь: ${i['square']}, этаж: ${i['floor']}, Адрес: ${i['city']}, ${i['district']}, ${i['sreet']}, ${i['housenumber']}, ${i['apartamentnumber']}</span>`
+              document.getElementById("thrid-query").innerHTML = "<tr><td>Название</td><td>Цена</td><td>Площадь</td><td>Этаж</td><td>Адрес</td></tr>";
+            for (var key in data){
+              i = data[key]
+             document.getElementById("thrid-query").innerHTML += 
+             `<tr> <td>${i['name']}</td> <td>${i['price']}</td> <td>${i['square']}</td> <td>${i['floor']}</td> <td>${i['city']}, ${i['district']}, ${i['sreet']}, ${i['housenumber']}, ${i['apartamentnumber']}</td></tr>`
             }
             });
     }
@@ -52,12 +94,25 @@
         }).then(response => response.text()).then(data => {
           data = JSON.parse(data);
           document.getElementById("fourth-query").innerHTML = "";
-        if (data.replace(/"/g, '') === "ERROR") {document.getElementById("fourth-query").innerHTML = "<span>ОШИБКА</span>"}
-        else{
-            for (i in data){
-             document.getElementById("fourth-query").innerHTML += `<span>${i['id']}, ${i['name']}, ${i['surname']}, ${i['email']}, ${i['rename']}</span>`
+          document.getElementById("fourth-query").innerHTML = `<tr>
+            <td>ID</td>
+            <td>Имя</td>
+            <td>Фамилия</td>
+            <td>Email</td>
+            <td>Название</td>
+            </tr>`;
+        
+            for (var key in data){
+              i = data[key]
+             document.getElementById("fourth-query").innerHTML += 
+             `<tr>
+            <td>${i['id']}</td>
+            <td>${i['name']}</td>
+            <td>${i['surname']}</td>
+            <td>${i['email']}</td>
+            <td>${i['rename']}</td>
+            </tr>`
             }
-        }
         })
     }
 
@@ -75,12 +130,13 @@
           <p>
         Запрос отображающий всех пользователей
           </p>
-          <button onclick="send_first()">
+          <button type="button" onclick="send_first()">
             <span>
             Выполнить
             </span>
           </button>
-           <div id="first-query">
+           <div>
+            <table id="first-query"></table>
            </div>
          </div>
    </li>
@@ -95,7 +151,10 @@
             Выполнить
             </span>
           </button>
-           <div id="second-query">
+           <div>
+            <table id="second-query">
+
+            </table>
              </div>
          </div>
    </li>
@@ -104,12 +163,13 @@
           <p>
             Запрос выводящий все объявления отсортированные по цене
           </p>
-          <button onclick="send_thrid()">
+          <button type="button" onclick="send_thrid()">
             <span>
             Выполнить
             </span>
           </button>
-           <div id="thrid-query">
+           <div>
+            <table id="thrid-query"></table>
              </div>
          </div>
    </li>
@@ -124,7 +184,10 @@
             Выполнить
             </span>
           </button>
-           <div id="fourth-query">
+           <div>
+            <table id="fourth-query">
+
+            </table>
              </div>
          </div>
    </li>

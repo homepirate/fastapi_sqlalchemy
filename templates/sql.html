@@ -10,20 +10,30 @@
            method: 'PUT',}).then(response => response.text())
                 .then(data => {
                   data = JSON.parse(data);
-                document.getElementById("first-query").innerHTML = `<span>${data.id}, ${data.name}, ${data.email}\n</span>`;
+                document.getElementById("first-query").innerHTML =  `<tr>
+      <td>${data.id}</td>
+      <td>${data.name}</td>
+      <td>${data.email}</td>
+      </tr>`;
                 });
     }
 
     function send_second(){
-        uid = document.getElementById("UID").value;
         let response = fetch(`/api/sql/count-indistrict`, {
-           method: 'DELETE',
+           method: 'POST',
         }).then(response => response.text()).then(data => {
           data = JSON.parse(data);
             document.getElementById("second-query").innerHTML = "";
-        for (i in data){
-         document.getElementById("second-query").innerHTML += `<span>${i['id']}, ${i['name']}, ${i['surname']}, ${i['email']}</span>`
-        }
+            document.getElementById("second-query").innerHTML = `<tr>
+      <td>Район</td>
+      <td>Колличество</td>
+        </tr>`;
+        for (var key in data){
+          i = data[key]
+         document.getElementById("second-query").innerHTML += `<tr>
+      <td>${i.district}</td>
+      <td>${i.count}</td>
+      </tr>`}
         });
     }
 
@@ -35,9 +45,21 @@
             }).then(response => response.text()).then(data => {
               data = JSON.parse(data);
                 document.getElementById("thrid-query").innerHTML = "";
-            for (i in data){
-             document.getElementById("thrid-query").innerHTML += `<span>${i['name']} ${i['surname']} ${i['email']} ${i['title']}</span>`
-            }
+                document.getElementById("thrid-query").innerHTML = `<tr>
+      <td>ID</td>
+      <td>Имя</td>
+      <td>Email</td>
+      <td>Статус</td>
+      </tr>`;
+            for (var key in data){
+              i = data[key]
+             document.getElementById("thrid-query").innerHTML += 
+             `<tr>
+      <td>${i.id}</td>
+      <td>${i.name}</td>
+      <td>${i.email}</td>
+      <td>${i.title}</td>
+      </tr>`}
             });
     }
 
@@ -72,12 +94,13 @@
             <p>
              Запрос показывающий количество квартир в каждом районе
             </p>
-            <button onclick="send_second()">
+            <button type="button" onclick="send_second()">
               <span>
               Выполнить
               </span>
             </button>
-             <div id="second-query">
+             <div>
+              <table id="second-query"></table>
                </div>
            </div>
      </li>
@@ -88,12 +111,13 @@
             </p>
              <input id="city" placeholder="city" type="text">
              <input id="square" placeholder="square" type="text">
-            <button onclick="send_thrid()">
+            <button type="button" onclick="send_thrid()">
               <span>
               Выполнить
               </span>
             </button>
-             <div id="thrid-query">
+             <div>
+              <table id="thrid-query"></table>
                </div>
            </div>
      </li>
